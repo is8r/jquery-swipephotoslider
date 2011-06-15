@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	
+	<title></title>
+	<meta name="author" lang="ja" content="">
+	<meta name="copyright" lang="ja" content="">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	
+	<!--include.js-->
+	<script type="text/javascript" src="./share/js/common/include.js"></script>
+	
+	<!--dyrect-->
+	<style type="text/css">
+	.photos div.btnSet{
+		clear:both;
+		margin:0 auto;
+		width:100px;
+	}
+	.photos ul.btn li a{
+		display:block;
+		padding:0 0 0 10px;
+		float:left;
+	}
+	.photos ul.btn li a.act,
+	.photos ul.btn li.next a.act,
+	.photos ul.btn li.back a.act
+	{
+		text-decoration:none;
+		color:#ccc;
+	}
+	</style>
+	<script type="text/javascript"><!--
+	$(function() {
+	  	$('.photos').swipephotoslider({
+	  		loop:false,
+	  		timer:true
+	  	});
+	});
+	// --></script>
+	
+</head>
+<body>
+
+<div data-role="page" id="home">
+
+	<!--photoswiper-->
+	<div class="photos">
+		<ul class="detail">
+			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+		</ul>
+		<div class="btnSet">
+			<ul class="btn">
+				<li class="back"><a href="#">&lt;</a></li> 
+				<li><a href="#">0</a></li> 
+				<li><a href="#">1</a></li> 
+				<li><a href="#">2</a></li> 
+				<li class="next"><a href="#">&gt;</a></li> 
+			</ul>
+		</div>
+	</div>
+	<!--/photoswiper-->
+	
+</div>
+
+
+</body>
+</html>
