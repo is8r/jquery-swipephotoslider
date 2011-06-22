@@ -3,7 +3,7 @@
  * SwipePhotoSlider
  * 
  * @description this jquery plugin was smartphone's photoslider.
- * @version 1.0
+ * @version 1.1
  * @date June-2011
  * @author Yu Ishihara - http://hommebrew.com/
  * @requires jQuery v1.4.1 or later, jquery.easing.1.3, jquery.touchSwipe-1.2.4, jquery.timer
@@ -76,13 +76,15 @@ $.fn.swipephotoslider = function(settings) {
 		direction: 'x',
 		loop: false,
 		width: -1,
+		leftmargin: 0,
 		height: -1,
 		nowId: -1,
 		maxId: -1,
 		timer: false,
 		timerInterval: 6000,
 		easeFunc: "easeOutExpo",
-		easeTime: 600
+		easeTime: 600,
+		items: []
 	}, settings);
 	
 	return this.each(function(){
@@ -90,8 +92,8 @@ $.fn.swipephotoslider = function(settings) {
 		
 		//add settings
 		settings.maxId = base.find("ul.detail > li").length;
-		settings.width = base.find("ul.detail img").width();
-		settings.height = base.find("ul.detail img").height();
+		if(settings.width == -1) settings.width = base.find("ul.detail img").width();
+		if(!settings.height == -1) settings.height = base.find("ul.detail img").height();
 		
 		//add css
 		base.css("position", "relative");		
@@ -105,8 +107,19 @@ $.fn.swipephotoslider = function(settings) {
 		base.find("ul.detail").css("position", "relative");		
 		base.find("ul.detail > li").css("float", "left");		
 		
+		if(settings.items.length == 0) {
+			base.find("ul.detail > li").each(function(i) {
+				$(this).val = i;
+				settings.items.push($(this));
+				$(this).css("left", settings.width*i);
+				
+				//loop用に末尾に3つコピーを作成
+				if(i < 3) $(this).clone().appendTo($(this).parent());
+			});
+		};
+		
 		//
-		var viewerWidth = settings.width*settings.maxId;
+		var viewerWidth = settings.width*(settings.maxId+3);
 		var viewerHeight = settings.height*settings.maxId;
 		
 		//slide - x
@@ -195,11 +208,11 @@ $.fn.swipephotoslider = function(settings) {
 			
 			var cnt;
 			if(settings.direction == 'x') {
-				//��
-				cnt = -(settings.width*settings.nowId);
+				//x
+				cnt = -(settings.width*settings.nowId)+settings.leftmargin;
 				base.find("ul.detail").stop().animate({left: cnt}, settings.easeTime, settings.easeFunc);
 			} else if(settings.direction == 'y') {
-				//�c
+				//y
 				//cnt = -(settings.height*z);
 				//base.find("ul").animate({top: cnt}, settings.easeTime);
 			}
@@ -208,21 +221,39 @@ $.fn.swipephotoslider = function(settings) {
 		});
 		$(this).bind("slideNext", function(e, n){
 			//if(!e) return;
-			settings.nowId += parseInt(n);
 			
-			if(settings.loop) {
-				if(settings.nowId > settings.maxId-1) settings.nowId = 0;
-				if(settings.nowId < 0) settings.nowId = settings.maxId-1;
+			var cnt;
+			if(settings.nowId == 0 && n == -1) {
+				//console.log('1番後ろに移動');
+				settings.nowId += settings.maxId-1;
+				cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+				base.find("ul.detail").stop().animate({left: cnt}, 0);
+				$(this).trigger("slide", settings.nowId);
 			} else {
-				if(settings.nowId > settings.maxId-1)  {
-					settings.nowId = settings.maxId-1;
-				} else if(settings.nowId < 0){
-					settings.nowId = 0;
+				settings.nowId += parseInt(n);
+				if(settings.loop) {
+					//if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
+					if(settings.nowId > settings.maxId) {//エンドレスループ用
+						//console.log('1番最初に移動');
+						settings.nowId = 0;
+						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+						base.find("ul.detail").stop().animate({left: 10}, 0, function(){
+							settings.nowId = 1;
+							$(this).trigger("slide", settings.nowId);
+						});
+						return;
+					} else if(settings.nowId < 0) settings.nowId = settings.maxId-1;
+				} else {
+					if(settings.nowId > settings.maxId-1)  {
+						settings.nowId = settings.maxId-1;
+					} else if(settings.nowId < 0){
+						settings.nowId = 0;
+					}
 				}
+				//
+				$(this).trigger("slide", settings.nowId);
 			}
 			
-			//
-			$(this).trigger("slide", settings.nowId);
 		});
 		
 		//btn active

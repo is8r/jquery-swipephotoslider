@@ -37,7 +37,7 @@ var jss = [
 	path+'share/js/plugin/jquery.touchSwipe-1.2.4.js',
 	path+'share/js/plugin/jquery.easing.1.3.js',
 	path+'share/js/plugin/jquery.timer.js',
-	path+'share/js/plugin/jquery.swipephotoslider-1.0.js'
+	path+'share/js/plugin/jquery.swipephotoslider-1.1.js'
 ];
 
 for (i = 0; i < jss.length; i++) {
