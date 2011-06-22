@@ -22,7 +22,6 @@ if(countPath.length > 2) {
 ////////////////////////////////////////////////////////////
 
 var csss = [
-	path+'share/jqm/themes/def/jquery.mobile.theme.css'
 ];
 
 for (i = 0; i < csss.length; i++) {
@@ -33,7 +32,6 @@ for (i = 0; i < csss.length; i++) {
 
 var jss = [
 	path+'share/js/plugin/jquery-1.5.2.min.js',
-	path+'share/jqm/jquery.mobile-1.0a4.1.js',
 	path+'share/js/plugin/jquery.touchSwipe-1.2.4.js',
 	path+'share/js/plugin/jquery.easing.1.3.js',
 	path+'share/js/plugin/jquery.timer.js',

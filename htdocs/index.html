@@ -20,6 +20,9 @@
 	
 	<!--dyrect-->
 	<style type="text/css">
+	.photos {
+		top:10px;
+	}
 	.photos div.btnSet{
 		clear:both;
 		margin:0 auto;
@@ -27,7 +30,7 @@
 	}
 	.photos ul.btn li a{
 		display:block;
-		padding:0 0 0 10px;
+		padding:10px 0 0 10px;
 		float:left;
 	}
 	.photos ul.btn li a.act,
@@ -50,29 +53,24 @@
 </head>
 <body>
 
-<div data-role="page" id="home">
-
-	<!--photoswiper-->
-	<div class="photos">
-		<ul class="detail">
-			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
-			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
-			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+<!--swipephotoslider-->
+<div class="photos">
+	<ul class="detail">
+		<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
+		<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
+		<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+	</ul>
+	<div class="btnSet">
+		<ul class="btn">
+			<li class="back"><a href="#">&lt;</a></li> 
+			<li><a href="#">0</a></li> 
+			<li><a href="#">1</a></li> 
+			<li><a href="#">2</a></li> 
+			<li class="next"><a href="#">&gt;</a></li> 
 		</ul>
-		<div class="btnSet">
-			<ul class="btn">
-				<li class="back"><a href="#">&lt;</a></li> 
-				<li><a href="#">0</a></li> 
-				<li><a href="#">1</a></li> 
-				<li><a href="#">2</a></li> 
-				<li class="next"><a href="#">&gt;</a></li> 
-			</ul>
-		</div>
 	</div>
-	<!--/photoswiper-->
-	
 </div>
-
+<!--/swipephotoslider-->
 
 </body>
 </html>

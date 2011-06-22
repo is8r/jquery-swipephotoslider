@@ -22,6 +22,9 @@
  * @howtouse
 	//html
 	<style type="text/css">
+	.photos t{
+		top:10px;
+	}
 	.photos div.btnSet{
 		clear:both;
 		margin:0 auto;
@@ -43,14 +46,14 @@
 	<script type="text/javascript"><!--
 	$(function() {
 	  	$('.photos').photoswiper({
-	  		loop:false,
+	  		loop:true,
 	  		timer:true
 	  	});
 	});
 	// --></script>
 	
 	//body
-	<!--photoswiper-->
+	<!--swipephotoslider-->
 	<div class="photos">
 		<ul class="detail">
 			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
@@ -67,7 +70,7 @@
 			</ul>
 		</div>
 	</div>
-	<!--/photoswiper-->
+	<!--/swipephotoslider-->
  * //////////////////////////////////////////////////////////////////////
 */
 
@@ -93,7 +96,7 @@ $.fn.swipephotoslider = function(settings) {
 		//add settings
 		settings.maxId = base.find("ul.detail > li").length;
 		if(settings.width == -1) settings.width = base.find("ul.detail img").width();
-		if(!settings.height == -1) settings.height = base.find("ul.detail img").height();
+		if(settings.height == -1) settings.height = base.find("ul.detail img").height();
 		
 		//add css
 		base.css("position", "relative");		
@@ -223,36 +226,35 @@ $.fn.swipephotoslider = function(settings) {
 			//if(!e) return;
 			
 			var cnt;
-			if(settings.nowId == 0 && n == -1) {
-				//console.log('1番後ろに移動');
-				settings.nowId += settings.maxId-1;
-				cnt = -(settings.width*settings.maxId)+settings.leftmargin;
-				base.find("ul.detail").stop().animate({left: cnt}, 0);
-				$(this).trigger("slide", settings.nowId);
-			} else {
-				settings.nowId += parseInt(n);
-				if(settings.loop) {
-					//if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
-					if(settings.nowId > settings.maxId) {//エンドレスループ用
-						//console.log('1番最初に移動');
-						settings.nowId = 0;
-						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
-						base.find("ul.detail").stop().animate({left: 10}, 0, function(){
-							settings.nowId = 1;
-							base.trigger("slide", settings.nowId);
-						});
-						return;
-					} else if(settings.nowId < 0) settings.nowId = settings.maxId-1;
-				} else {
-					if(settings.nowId > settings.maxId-1)  {
-						settings.nowId = settings.maxId-1;
-					} else if(settings.nowId < 0){
-						settings.nowId = 0;
-					}
+			settings.nowId += parseInt(n);
+			if(settings.loop) {
+				//if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
+				if(settings.nowId == -1 && n == -1) {//エンドレスループ-1番後ろに移動
+					settings.nowId += settings.maxId;
+					cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+					base.find("ul.detail").stop().animate({left: cnt}, 0);
+					$(this).trigger("slide", settings.nowId);
+					return;
+				} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
+					settings.nowId = 0;
+					cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+					base.find("ul.detail").stop().animate({left:0}, 0, function(){
+						settings.nowId = 1;
+						$(this).trigger("slide", settings.nowId);
+					});
+					return;
+				} else if(settings.nowId < 0) {
+					settings.nowId = settings.maxId-1;
 				}
-				//
-				$(this).trigger("slide", settings.nowId);
+			} else {
+				if(settings.nowId > settings.maxId-1)  {
+					settings.nowId = settings.maxId-1;
+				} else if(settings.nowId < 0){
+					settings.nowId = 0;
+				}
 			}
+			//
+			$(this).trigger("slide", settings.nowId);
 			
 		});
 		
