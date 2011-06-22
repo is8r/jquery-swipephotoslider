@@ -140,7 +140,7 @@ $.fn.swipephotoslider = function(settings) {
 		var timer;
 		if(settings.timer){
 			timer = $.timer(settings.timerInterval, function (timer){
-				$('.slidephoto').trigger("slideNext", 1);
+				base.trigger("slideNext", 1);
 			});
 		}
 		
@@ -180,20 +180,20 @@ $.fn.swipephotoslider = function(settings) {
 		//////////////////////////////////////////////////////////////////////
 
 		//navigation
-		$(this).find("ul.btn li:not(.next,.back) a").each(function(i){
+		base.find("ul.btn li:not(.next,.back) a").each(function(i){
 			$(this).attr('id', i);
 			$(this).click(function(e){
 				base.trigger("slide", $(this).attr('id'));
 				return false;
 			});
 		});
-		$(this).find("ul.btn li.next").each(function(i){
+		base.find("ul.btn li.next").each(function(i){
 			$(this).click(function(e){
 				base.trigger("slideNext", 1);
 				return false;
 			});
 		});
-		$(this).find("ul.btn li.back").each(function(i){
+		base.find("ul.btn li.back").each(function(i){
 			$(this).click(function(e){
 				base.trigger("slideNext", -1);
 				return false;
@@ -201,7 +201,7 @@ $.fn.swipephotoslider = function(settings) {
 		});
 		
 		//slide photo
-		$(this).bind("slide", function(e, n){
+		base.bind("slide", function(e, n){
 			if(!e) return;
 			settings.nowId = parseInt(n);
 			if(timer) timer.reset(settings.timerInterval);
@@ -239,7 +239,7 @@ $.fn.swipephotoslider = function(settings) {
 						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
 						base.find("ul.detail").stop().animate({left: 10}, 0, function(){
 							settings.nowId = 1;
-							$(this).trigger("slide", settings.nowId);
+							base.trigger("slide", settings.nowId);
 						});
 						return;
 					} else if(settings.nowId < 0) settings.nowId = settings.maxId-1;
@@ -262,17 +262,17 @@ $.fn.swipephotoslider = function(settings) {
 			if(n > settings.maxId-1) n = settings.maxId - n;
 			
 			if(!settings.loop) {
-				$('ul.btn li.next a').removeClass('act');
-				$('ul.btn li.back a').removeClass('act');
+				$(this).find('ul.btn li.next a').removeClass('act');
+				$(this).find('ul.btn li.back a').removeClass('act');
 				if(n >= settings.maxId-1)  {
-					$('ul.btn li.next a').addClass('act');
-					$('ul.btn li.back a').removeClass('act');
+					$(this).find('ul.btn li.next a').addClass('act');
+					$(this).find('ul.btn li.back a').removeClass('act');
 				} else if(n <= 0){
-					$('ul.btn li.next a').removeClass('act');
-					$('ul.btn li.back a').addClass('act');
+					$(this).find('ul.btn li.next a').removeClass('act');
+					$(this).find('ul.btn li.back a').addClass('act');
 				}
 			}
-		  	$('ul.btn li:not(.next, .back)').each(function(i) {
+		  	$(this).find('ul.btn li:not(.next, .back)').each(function(i) {
 		  		if(i == n) {
 					$(this).find('a').addClass('act');
 		  		} else {
