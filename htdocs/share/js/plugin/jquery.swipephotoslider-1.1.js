@@ -258,6 +258,9 @@ $.fn.swipephotoslider = function(settings) {
 		
 		//btn active
 		$(this).bind("actBtn", function(e, n){
+			
+			if(n > settings.maxId-1) n = settings.maxId - n;
+			
 			if(!settings.loop) {
 				$('ul.btn li.next a').removeClass('act');
 				$('ul.btn li.back a').removeClass('act');
