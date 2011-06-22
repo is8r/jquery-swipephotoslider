@@ -137,6 +137,9 @@ $.fn.swipephotoslider = function(settings) {
 		//slide - alpha
 		//
 		
+		//
+		if(settings.maxId < 2) return;
+		
 		//////////////////////////////////////////////////////////////////////
 
 		//timer
