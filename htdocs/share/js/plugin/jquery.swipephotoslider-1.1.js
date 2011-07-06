@@ -86,12 +86,15 @@ $.fn.swipephotoslider = function(settings) {
 		timer: false,
 		timerInterval: 6000,
 		easeFunc: "easeOutExpo",
-		easeTime: 600,
-		items: []
+		easeTime: 600
 	}, settings);
 	
 	return this.each(function(){
 		var base = $(this);
+		
+		//cansel
+		if($(this).attr('isReady') != undefined) return;
+		$(this).attr('isReady','true');
 		
 		//add settings
 		settings.maxId = base.find("ul.detail > li").length;
@@ -110,29 +113,26 @@ $.fn.swipephotoslider = function(settings) {
 		base.find("ul.detail").css("position", "relative");		
 		base.find("ul.detail > li").css("float", "left");		
 		
-		if(settings.items.length == 0) {
-			base.find("ul.detail > li").each(function(i) {
-				$(this).val = i;
-				settings.items.push($(this));
-				$(this).css("left", settings.width*i);
-				
-				//loop用に末尾に3つコピーを作成
-				if(i < 3) $(this).clone().appendTo($(this).parent());
-			});
-		};
-		
 		//
 		var viewerWidth = settings.width*(settings.maxId+3);
 		var viewerHeight = settings.height*settings.maxId;
 		
-		//slide - x
-		base.css("width", settings.width);
-		base.find("ul.detail").css("width" , viewerWidth);
-		base.find("ul.detail > li").css("width" , settings.width);		
+		//loop用に末尾に3つコピーを作成
+		base.find("ul.detail > li").each(function(i) {
+			if(i < 3) $(this).clone().appendTo($(this).parent());
+		});
 		
-		//slide - y
-		//base.find("ul.detail").css("height" , viewerHeight);
-		//base.css("height" , settings.height);
+		if(settings.direction == 'x') {
+			//slide - x
+			base.css("width", settings.width);
+			base.find("ul.detail").css("width" , viewerWidth);
+			base.find("ul.detail > li").css("width" , settings.width);		
+		} else if(settings.direction == 'y') {
+			//slide - y
+			base.css("height" , settings.height);
+			base.find("ul.detail").css("height" , viewerHeight);
+			base.find("ul.detail > li").css("height" , settings.height);		
+		}
 		
 		//slide - alpha
 		//
@@ -168,10 +168,12 @@ $.fn.swipephotoslider = function(settings) {
 		}
 		function click(event, target)
 		{
-		    //alert($(target).closest('a').attr('href'));
-		    if(!$(target).closest('a').attr('target')) $(target).closest('a').attr('target', '_self')
-		    window.open($(target).closest('a').attr('href'), $(target).closest('a').attr('target'));
-		    return false;
+			if($(target).closest('a').length > 0) {
+			    //alert($(target).closest('a').attr('href'));
+			    if(!$(target).closest('a').attr('target')) $(target).closest('a').attr('target', '_self')
+			    window.open($(target).closest('a').attr('href'), $(target).closest('a').attr('target'));
+			    return false;
+			}
 		}
 		
 		//harf click slide(smart phone - off)
@@ -210,7 +212,7 @@ $.fn.swipephotoslider = function(settings) {
 		base.bind("slide", function(e, n){
 			if(!e) return;
 			settings.nowId = parseInt(n);
-			if(timer) timer.reset(settings.timerInterval);
+			if(settings.timer && timer) timer.reset(settings.timerInterval);
 			
 			var cnt;
 			if(settings.direction == 'x') {
@@ -219,8 +221,8 @@ $.fn.swipephotoslider = function(settings) {
 				base.find("ul.detail").stop().animate({left: cnt}, settings.easeTime, settings.easeFunc);
 			} else if(settings.direction == 'y') {
 				//y
-				//cnt = -(settings.height*z);
-				//base.find("ul").animate({top: cnt}, settings.easeTime);
+				cnt = -(settings.height*z);
+				base.find("ul").animate({top: cnt}, settings.easeTime);
 			}
 			
 			$(this).trigger("actBtn", settings.nowId);
