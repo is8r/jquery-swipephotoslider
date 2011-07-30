@@ -93,52 +93,64 @@ $.fn.swipephotoslider = function(settings) {
 		var base = $(this);
 		
 		//cansel
-		if($(this).attr('isReady') != undefined) return;
-		$(this).attr('isReady','true');
+		if(base.attr('isReady') != undefined) return;
+		base.attr('isReady','true');
 		
 		//add settings
-		settings.maxId = base.find("ul.detail > li").length;
-		if(settings.width == -1) settings.width = base.find("ul.detail img").width();
-		if(settings.height == -1) settings.height = base.find("ul.detail img").height();
+		settings.maxId = base.find(".photoSet > ul > li").length;
+		if(settings.width == -1) settings.width = base.find(".photoSet > ul img").width();
+		if(settings.height == -1) settings.height = base.find(".photoSet > ul img").height();
 		
 		//add css
 		base.css("position", "relative");		
-		base.css("margin", "0 auto");		
+		base.css("margin", "0");		
 		base.css("padding", "0");		
 		base.find("ul").css("margin", "0");		
 		base.find("ul").css("padding", "0");		
 		base.find("ul").css("list-style", "none");		
-		base.css("position", "relative");
-		base.css("overflow", "hidden");
-		base.find("ul.detail").css("position", "relative");		
-		base.find("ul.detail > li").css("float", "left");		
+		base.find(".photoSet").css("overflow", "hidden");
+		base.find(".photoSet").css("margin", "0 auto");		
+		base.find(".photoSet").css("width", settings.width);
+		base.find(".photoSet").css("height", settings.height);
+		base.find(".photoSet > ul").css("position", "relative");		
+		base.find(".photoSet > ul > li").css("float", "left");
 		
 		//
-		var viewerWidth = settings.width*(settings.maxId+3);
-		var viewerHeight = settings.height*settings.maxId;
+		var viewerWidth;
+		var viewerHeight;
 		
-		//loop用に末尾に3つコピーを作成
-		base.find("ul.detail > li").each(function(i) {
-			if(i < 3) $(this).clone().appendTo($(this).parent());
-		});
+		if(settings.direction == 'x') {
+			viewerWidth = settings.width*(settings.maxId+3);
+			viewerHeight = settings.height;
+		} else if(settings.direction == 'y') {
+			viewerWidth = settings.width;
+			viewerHeight = settings.height*(settings.maxId+3);
+		}
 		
 		if(settings.direction == 'x') {
 			//slide - x
-			base.css("width", settings.width);
-			base.find("ul.detail").css("width" , viewerWidth);
-			base.find("ul.detail > li").css("width" , settings.width);		
+			base.find(".photoSet > ul").css("width" , viewerWidth);
+			base.find(".photoSet > ul").css("height" , viewerHeight);
+			base.find(".photoSet > ul > li").css("width" , settings.width);		
 		} else if(settings.direction == 'y') {
 			//slide - y
-			base.css("height" , settings.height);
-			base.find("ul.detail").css("height" , viewerHeight);
-			base.find("ul.detail > li").css("height" , settings.height);		
+			base.find(".photoSet > ul").css("width" , viewerWidth);
+			base.find(".photoSet > ul").css("height" , settings.height);
+			base.find(".photoSet > ul > li").css("height" , settings.height);		
 		}
 		
-		//slide - alpha
+		//settings.direction - alpha
 		//
 		
 		//
-		if(settings.maxId < 2) return;
+		if(settings.maxId < 2) {
+			return;
+		} else if(settings.loop == true) {
+			//loop用に末尾に3つコピーを作成
+			base.find(".photoSet > ul > li").each(function(i) {
+				if(i < 3) $(this).clone().appendTo($(this).parent());
+			});
+		}
 		
 		//////////////////////////////////////////////////////////////////////
 
@@ -153,18 +165,29 @@ $.fn.swipephotoslider = function(settings) {
 		//////////////////////////////////////////////////////////////////////
 
 		//swipe + click
-		base.find("ul.detail").swipe({
+		base.find(".photoSet > ul").swipe({
 			click:click,
 			swipe:swipe,
-			threshold:50,
+			threshold:0,
 			allowPageScroll:"auto"
 		});
 		function swipe(event, direction) {
-		    if(direction == 'left') {
-				base.trigger("slideNext", 1);
-		    } else if(direction == 'right') {
-				base.trigger("slideNext", -1);
-		    }
+			if(settings.direction == 'x') {
+				//x
+			    if(direction == 'left') {
+					base.trigger("slideNext", 1);
+			    } else if(direction == 'right') {
+					base.trigger("slideNext", -1);
+			    }
+			} else if(settings.direction == 'y') {
+				//y
+			    if(direction == 'up') {
+					base.trigger("slideNext", 1);
+			    } else if(direction == 'down') {
+					base.trigger("slideNext", -1);
+			    }
+			}
+			
 		}
 		function click(event, target)
 		{
@@ -177,7 +200,7 @@ $.fn.swipephotoslider = function(settings) {
 		}
 		
 		//harf click slide(smart phone - off)
-		base.find('ul.detail').bind("click", function(e){
+		base.find('.photoSet > ul').bind("click", function(e){
 			if(e.clientX > settings.width/2) {
 				base.trigger("slideNext", 1);
 			} else {
@@ -188,20 +211,20 @@ $.fn.swipephotoslider = function(settings) {
 		//////////////////////////////////////////////////////////////////////
 
 		//navigation
-		base.find("ul.btn li:not(.next,.back) a").each(function(i){
+		base.find(".btnSet > ul li:not(.next,.back) a").each(function(i){
 			$(this).attr('id', i);
 			$(this).click(function(e){
 				base.trigger("slide", $(this).attr('id'));
 				return false;
 			});
 		});
-		base.find("ul.btn li.next").each(function(i){
+		base.find(".btnSet > ul li.next").each(function(i){
 			$(this).click(function(e){
 				base.trigger("slideNext", 1);
 				return false;
 			});
 		});
-		base.find("ul.btn li.back").each(function(i){
+		base.find(".btnSet > ul li.back").each(function(i){
 			$(this).click(function(e){
 				base.trigger("slideNext", -1);
 				return false;
@@ -218,68 +241,96 @@ $.fn.swipephotoslider = function(settings) {
 			if(settings.direction == 'x') {
 				//x
 				cnt = -(settings.width*settings.nowId)+settings.leftmargin;
-				base.find("ul.detail").stop().animate({left: cnt}, settings.easeTime, settings.easeFunc);
+				base.find(".photoSet > ul").stop().animate({left: cnt}, settings.easeTime, settings.easeFunc);
 			} else if(settings.direction == 'y') {
 				//y
-				cnt = -(settings.height*z);
+				cnt = -(settings.height*n);
 				base.find("ul").animate({top: cnt}, settings.easeTime);
 			}
 			
-			$(this).trigger("actBtn", settings.nowId);
+			base.trigger("actBtn", settings.nowId);
 		});
-		$(this).bind("slideNext", function(e, n){
+		base.bind("slideNext", function(e, n){
 			//if(!e) return;
 			
 			var cnt;
 			settings.nowId += parseInt(n);
 			if(settings.loop) {
-				//if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
-				if(settings.nowId == -1 && n == -1) {//エンドレスループ-1番後ろに移動
-					settings.nowId += settings.maxId;
-					cnt = -(settings.width*settings.maxId)+settings.leftmargin;
-					base.find("ul.detail").stop().animate({left: cnt}, 0);
-					$(this).trigger("slide", settings.nowId);
-					return;
-				} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
-					settings.nowId = 0;
-					cnt = -(settings.width*settings.maxId)+settings.leftmargin;
-					base.find("ul.detail").stop().animate({left:0}, 0, function(){
-						settings.nowId = 1;
-						$(this).trigger("slide", settings.nowId);
-					});
-					return;
-				} else if(settings.nowId < 0) {
-					settings.nowId = settings.maxId-1;
+				
+				if(settings.direction == 'x') {
+					//slide - x
+					//if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
+					if(settings.nowId == -1 && n == -1) {//エンドレスループ-1番後ろに移動
+						settings.nowId += settings.maxId;
+						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+						base.find(".photoSet > ul").stop().animate({left: cnt}, 0);
+						base.trigger("slide", settings.nowId);
+						return;
+					} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
+						settings.nowId = 0;
+						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
+						base.find(".photoSet > ul").stop().animate({left:0}, 0, function(){
+							settings.nowId = 1;
+							base.trigger("slide", settings.nowId);
+						});
+						return;
+					} else if(settings.nowId < 0) {
+						settings.nowId = settings.maxId-1;
+						//
+						base.trigger("slide", settings.nowId);
+						return;
+					}
+				} else if(settings.direction == 'y') {
+					//slide - y
+					if(settings.nowId == -1 && n == -1) {//エンドレスループ-1番後ろに移動
+						settings.nowId += settings.maxId;
+						cnt = -(settings.height*settings.maxId)+settings.leftmargin;
+						base.find(".photoSet > ul").stop().animate({top: cnt}, 0);
+						base.trigger("slide", settings.nowId);
+						return;
+					} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
+						settings.nowId = 0;
+						cnt = -(settings.height*settings.maxId)+settings.leftmargin;
+						base.find(".photoSet > ul").stop().animate({top:0}, 0, function(){
+							settings.nowId = 1;
+							base.trigger("slide", settings.nowId);
+						});
+						return;
+					} else if(settings.nowId < 0) {
+						settings.nowId = settings.maxId-1;
+						base.trigger("slide", settings.nowId);
+						return;
+					}
 				}
+		
 			} else {
-				if(settings.nowId > settings.maxId-1)  {
-					settings.nowId = settings.maxId-1;
-				} else if(settings.nowId < 0){
-					settings.nowId = 0;
-				}
+				if(settings.nowId > settings.maxId-1) settings.nowId = settings.maxId-1;
+				else if(settings.nowId < 0) settings.nowId = 0;
 			}
-			//
-			$(this).trigger("slide", settings.nowId);
 			
+			//
+			base.trigger("slide", settings.nowId);
 		});
 		
+		//////////////////////////////////////////////////////////////////////
+
 		//btn active
-		$(this).bind("actBtn", function(e, n){
+		base.bind("actBtn", function(e, n){
 			
 			if(n > settings.maxId-1) n = settings.maxId - n;
 			
 			if(!settings.loop) {
-				$(this).find('ul.btn li.next a').removeClass('act');
-				$(this).find('ul.btn li.back a').removeClass('act');
+				base.find('.btnSet > ul li.next a').removeClass('act');
+				base.find('.btnSet > ul li.back a').removeClass('act');
 				if(n >= settings.maxId-1)  {
-					$(this).find('ul.btn li.next a').addClass('act');
-					$(this).find('ul.btn li.back a').removeClass('act');
+					base.find('.btnSet > ul li.next a').addClass('act');
+					base.find('.btnSet > ul li.back a').removeClass('act');
 				} else if(n <= 0){
-					$(this).find('ul.btn li.next a').removeClass('act');
-					$(this).find('ul.btn li.back a').addClass('act');
+					base.find('.btnSet > ul li.next a').removeClass('act');
+					base.find('.btnSet > ul li.back a').addClass('act');
 				}
 			}
-		  	$(this).find('ul.btn li:not(.next, .back)').each(function(i) {
+		  	base.find('.btnSet > ul li:not(.next, .back)').each(function(i) {
 		  		if(i == n) {
 					$(this).find('a').addClass('act');
 		  		} else {
@@ -291,7 +342,7 @@ $.fn.swipephotoslider = function(settings) {
 		//////////////////////////////////////////////////////////////////////
 
 		//start
-		$(this).trigger("slide", 0);
+		base.trigger("slide", 0);
 		
 		//////////////////////////////////////////////////////////////////////
 

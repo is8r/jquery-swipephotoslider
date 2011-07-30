@@ -43,8 +43,13 @@
 	</style>
 	<script type="text/javascript"><!--
 	$(function() {
-	  	$('.photos').swipephotoslider({
+	  	$('.photos.conts0').swipephotoslider({
 	  		direction:'x',
+	  		loop:true,
+	  		timer:true
+	  	});
+	  	$('.photos.conts1').swipephotoslider({
+	  		direction:'y',
 	  		loop:true,
 	  		timer:true
 	  	});
@@ -55,12 +60,14 @@
 <body>
 
 <!--swipephotoslider-->
-<div class="photos">
-	<ul class="detail">
-		<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
-		<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
-		<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
-	</ul>
+<div class="photos conts0">
+	<div class="photoSet">
+		<ul>
+			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+		</ul>
+	</div>
 	<div class="btnSet">
 		<ul class="btn">
 			<li class="back"><a href="#">&lt;</a></li> 
@@ -72,6 +79,45 @@
 	</div>
 </div>
 <!--/swipephotoslider-->
+
+<br />
+<br />
+
+<!--swipephotoslider-->
+<div class="photos conts1">
+	<div class="photoSet">
+		<ul>
+			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+		</ul>
+	</div>
+	<div class="btnSet">
+		<ul class="btn">
+			<li class="back"><a href="#">&lt;</a></li> 
+			<li><a href="#">0</a></li> 
+			<li><a href="#">1</a></li> 
+			<li><a href="#">2</a></li> 
+			<li class="next"><a href="#">&gt;</a></li> 
+		</ul>
+	</div>
+</div>
+<!--/swipephotoslider-->
+
+<br />
+<br />
+
+<br />
+<br />
+
+<br />
+<br />
+
+<br />
+<br />
+
+<br />
+<br />
 
 </body>
 </html>
