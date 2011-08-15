@@ -197,11 +197,15 @@ $.fn.swipephotoslider = function(settings) {
 
 		//swipe + click
 		try{//touchSwipeがAndroid2.2以下非対応の為回避
-			base.find(".photoSet > ul").swipe({
-				click:click,
-				swipe:swipe,
-				threshold:0,
-				allowPageScroll:"auto"
+			base.find(".photoSet").each(function(i) {
+				$(this).find("ul").each(function(i) {
+					$(this).swipe({
+						click:click,
+						swipe:swipe,
+						threshold:0,
+						allowPageScroll:"auto"
+					});
+				});
 			});
 		}catch(e){};
 		
