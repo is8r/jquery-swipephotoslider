@@ -16,22 +16,43 @@
 	
 	<!--include-->
 	<link rel="stylesheet" type="text/css" href="share/css/import.css" media="screen,print" />
-	<script type="text/javascript" src="./share/js/common/include.js"></script>
+	<script type="text/javascript" src="./share/js/plugin/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="./share/js/plugin/jquery.touchSwipe-1.2.4.js"></script>
+	<script type="text/javascript" src="./share/js/plugin/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="./share/js/plugin/jquery.timer.js"></script>
+	<script type="text/javascript" src="./share/js/plugin/jquery.swipephotoslider-1.2.js"></script>
 	
 	<!--dyrect-->
 	<style type="text/css">
+	/* page */
+	h1,
+	h2,
+	h3 {
+		text-align: center;
+		margin: 0 0 0 0;
+		padding: 10px 0 10px 0;
+		border-top: 1px dotted #ddd;
+	}
+	h2 {
+		text-decoration: underline;
+	}
+	
+	/* swipephotoslider */
 	.photos {
-		top:10px;
 	}
 	.photos div.btnSet{
 		clear:both;
-		margin:0 auto;
-		width:100px;
+		text-align: center;
+	}
+	.photos ul.btn li {
+		display:inline-block;
+		/display:inline;
+		/zoom:1;
 	}
 	.photos ul.btn li a{
 		display:block;
-		padding:10px 0 0 10px;
 		float:left;
+		padding:10px 0 0 10px;
 	}
 	.photos ul.btn li a.act,
 	.photos ul.btn li.next a.act,
@@ -51,7 +72,14 @@
 	  	$('.photos.conts1').swipephotoslider({
 	  		direction:'y',
 	  		loop:true,
-	  		timer:true
+	  		timer:true,
+	  		timerDelay:300
+	  	});
+	  	$('.photos.conts2').swipephotoslider({
+	  		direction:'fade',
+	  		loop:true,
+	  		timer:true,
+	  		timerDelay:600
 	  	});
 	});
 	// --></script>
@@ -59,7 +87,15 @@
 </head>
 <body>
 
+<h1>jQuery Plugin - swipephotoslider</h1>
+
+<h2><a href="https://github.com/is8r/jquery-swipephotoslider" target="_blank">github project page.</a></h2>
+
+<h2><a href="http://hommebrew.com/lab/?p=55" target="_blank">how to use.</a></h2>
+
+<h2>demo</h2>
 <!--swipephotoslider-->
+<h3>[x軸]</h3>
 <div class="photos conts0">
 	<div class="photoSet">
 		<ul>
@@ -84,7 +120,33 @@
 <br />
 
 <!--swipephotoslider-->
+<h3>[y軸]</h3>
 <div class="photos conts1">
+	<div class="photoSet">
+		<ul>
+			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
+			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
+		</ul>
+	</div>
+	<div class="btnSet">
+		<ul class="btn">
+			<li class="back"><a href="#">&lt;</a></li> 
+			<li><a href="#">0</a></li> 
+			<li><a href="#">1</a></li> 
+			<li><a href="#">2</a></li> 
+			<li class="next"><a href="#">&gt;</a></li> 
+		</ul>
+	</div>
+</div>
+<!--/swipephotoslider-->
+
+<br />
+<br />
+
+<!--swipephotoslider-->
+<h3>[フェードイン、アウト]</h3>
+<div class="photos conts2">
 	<div class="photoSet">
 		<ul>
 			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 

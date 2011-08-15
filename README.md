@@ -12,5 +12,5 @@ Sample
 ・カスタマイズが簡単。
 
 [source]
-・/htdocs/share/js/plugin/jquery.swipephotoslider-1.1.js
+・/htdocs/share/js/plugin/jquery.swipephotoslider-1.2.js
 

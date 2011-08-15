@@ -20,9 +20,10 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * @howtouse
-	//html
+	//head
+	<!--dyrect-->
 	<style type="text/css">
-	.photos t{
+	.photos {
 		top:10px;
 	}
 	.photos div.btnSet{
@@ -32,7 +33,7 @@
 	}
 	.photos ul.btn li a{
 		display:block;
-		padding:0 0 0 10px;
+		padding:10px 0 0 10px;
 		float:left;
 	}
 	.photos ul.btn li a.act,
@@ -45,35 +46,47 @@
 	</style>
 	<script type="text/javascript"><!--
 	$(function() {
-	  	$('.photos').photoswiper({
+	  	$('.photos.conts0').swipephotoslider({
+	  		direction:'x',
+	  		loop:true,
+	  		timer:true
+	  	});
+	  	$('.photos.conts1').swipephotoslider({
+	  		direction:'y',
+	  		loop:true,
+	  		timer:true
+	  	});
+	  	$('.photos.conts2').swipephotoslider({
+	  		direction:'fade',
 	  		loop:true,
 	  		timer:true
 	  	});
 	});
 	// --></script>
-	
 	//body
-	<!--swipephotoslider-->
-	<div class="photos">
-		<ul class="detail">
+<!--swipephotoslider-->
+<div class="photos conts0">
+	<div class="photoSet">
+		<ul>
 			<li><a href="http://google.co.jp" target="_blank"><img src="images/bnr0.jpg" alt="" width="320" height="150" /></a></li> 
 			<li><a href="http://yahoo.co.jp"><img src="images/bnr1.jpg" alt="" width="320" height="150" /></a></li> 
 			<li><a href="http://facebook.com"><img src="images/bnr2.jpg" alt="" width="320" height="150" /></a></li> 
 		</ul>
-		<div class="btnSet">
-			<ul class="btn">
-				<li class="back"><a href="#">&lt;</a></li> 
-				<li><a href="#">0</a></li> 
-				<li><a href="#">1</a></li> 
-				<li><a href="#">2</a></li> 
-				<li class="next"><a href="#">&gt;</a></li> 
-			</ul>
-		</div>
 	</div>
-	<!--/swipephotoslider-->
+	<div class="btnSet">
+		<ul class="btn">
+			<li class="back"><a href="#">&lt;</a></li> 
+			<li><a href="#">0</a></li> 
+			<li><a href="#">1</a></li> 
+			<li><a href="#">2</a></li> 
+			<li class="next"><a href="#">&gt;</a></li> 
+		</ul>
+	</div>
+</div>
+<!--/swipephotoslider-->
  * //////////////////////////////////////////////////////////////////////
 */
-
+$(function() {
 $.fn.swipephotoslider = function(settings) {
 	settings = $.extend({
 		direction: 'x',//'x','y','fade'
@@ -81,24 +94,31 @@ $.fn.swipephotoslider = function(settings) {
 		width: -1,
 		leftmargin: 0,
 		height: -1,
-		nowId: -1,
+		nowId: 0,
 		maxId: -1,
 		items:[],
 		timer: false,
-		timerInterval: 6000,
+		timerDelay: 0,//最初のタイマーのタイミングをずらしたい時に使用
+		timerInterval: 9000,
 		easeFunc: "easeOutExpo",
+		isBtn: true, //urlを直接叩いて遷移するなど、ボタンアクションを使用しない時はfalse
 		easeTime: 600
 	}, settings);
 	
 	return this.each(function(){
 		var base = $(this);
+		//console.log(base);
 		
 		//cansel
 		if(base.attr('isReady') != undefined) return;
 		base.attr('isReady','true');
 		
 		//add settings
-		settings.maxId = base.find(".photoSet > ul > li").length;
+		//settings.maxId = base.find(".photoSet > ul > li").length;
+		base.find(".photoSet").each(function(i) {
+			settings.maxId = $(this).find("ul > li").length;
+		});
+		
 		if(settings.width == -1) settings.width = base.find(".photoSet > ul img").width();
 		if(settings.height == -1) settings.height = base.find(".photoSet > ul img").height();
 		
@@ -142,27 +162,25 @@ $.fn.swipephotoslider = function(settings) {
 			base.find(".photoSet > ul").css("height" , settings.height);
 			base.find(".photoSet > ul > li").css("height" , settings.height);		
 		} else if(settings.direction == 'fade') {
-			//slide - y
+			//slide - fade
 			base.find(".photoSet > ul").css("position" , "relative");
 			base.find(".photoSet > ul > li").css("position" , "absolute");	
 			base.find(".photoSet > ul > li").css("top" , "0");	
 			base.find(".photoSet > ul > li").css("left" , "0");	
 		}
-		//settings.direction - alpha
-		//
 		
 		//
 		if(settings.maxId < 2) {
 			return;
 		} else if(settings.loop == true) {
-			
 			if(settings.direction == 'x' || settings.direction == 'y') {
 				//loop用に末尾に3つコピーを作成
-				base.find(".photoSet > ul > li").each(function(i) {
-					if(i < 3) $(this).clone().appendTo($(this).parent());
+				base.find(".photoSet").each(function(i) {
+					$(this).find("ul > li").each(function(i) {
+						if(i < 3) $(this).clone().appendTo($(this).parent());
+					});
 				});
 			}
-			
 		}
 		
 		//////////////////////////////////////////////////////////////////////
@@ -215,6 +233,7 @@ $.fn.swipephotoslider = function(settings) {
 			}
 		}
 		
+		/*
 		//harf click slide(smart phone - off)
 		base.find('.photoSet > ul').bind("click", function(e){
 			if(e.clientX > settings.width/2) {
@@ -223,16 +242,19 @@ $.fn.swipephotoslider = function(settings) {
 				base.trigger("slideNext", -1);
 			}
 		});
+		*/
 		
 		//////////////////////////////////////////////////////////////////////
 
-		//navigation
+		//btns
 		base.find(".btnSet > ul li:not(.next,.back) a").each(function(i){
 			$(this).attr('id', i);
-			$(this).click(function(e){
-				base.trigger("slide", $(this).attr('id'));
-				return false;
-			});
+			if(settings.isBtn) {
+				$(this).click(function(e){
+					base.trigger("slide", $(this).attr('id'));
+					return false;
+				});
+			}
 		});
 		base.find(".btnSet > ul li.next").each(function(i){
 			$(this).click(function(e){
@@ -247,6 +269,8 @@ $.fn.swipephotoslider = function(settings) {
 			});
 		});
 		
+		//////////////////////////////////////////////////////////////////////
+
 		//slide photo
 		base.bind("slide", function(e, n){
 			if(!e) return;
@@ -261,7 +285,7 @@ $.fn.swipephotoslider = function(settings) {
 			} else if(settings.direction == 'y') {
 				//y
 				cnt = -(settings.height*n);
-				base.find("ul").animate({top: cnt}, settings.easeTime);
+				base.find(".photoSet > ul").animate({top: cnt}, settings.easeTime);
 			} else if(settings.direction == 'fade') {
 				base.find('.photoSet > ul > li').each(function(i) {
 					if(i == settings.nowId) $(this).fadeIn();
@@ -287,12 +311,17 @@ $.fn.swipephotoslider = function(settings) {
 						base.find(".photoSet > ul").stop().animate({left: cnt}, 0);
 						base.trigger("slide", settings.nowId);
 						return;
-					} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
+					} else if(settings.nowId == settings.maxId+1) {//エンドレスループ-1番最初に移動
 						settings.nowId = 0;
 						cnt = -(settings.width*settings.maxId)+settings.leftmargin;
-						base.find(".photoSet > ul").stop().animate({left:0}, 0, function(){
-							settings.nowId = 1;
-							base.trigger("slide", settings.nowId);
+						base.find(".photoSet").each(function(i) {
+							$(this).find("ul").each(function(i) {
+								$(this).stop().animate({left:0}, 0, function(){
+									settings.nowId = 1;
+									base.trigger("slide", settings.nowId);
+									//console.log('fin!!');
+								});
+							});
 						});
 						return;
 					} else if(settings.nowId < 0) {
@@ -309,12 +338,17 @@ $.fn.swipephotoslider = function(settings) {
 						base.find(".photoSet > ul").stop().animate({top: cnt}, 0);
 						base.trigger("slide", settings.nowId);
 						return;
-					} else if(settings.nowId > settings.maxId) {//エンドレスループ-1番最初に移動
+					} else if(settings.nowId == settings.maxId+1) {//エンドレスループ-1番最初に移動
 						settings.nowId = 0;
 						cnt = -(settings.height*settings.maxId)+settings.leftmargin;
-						base.find(".photoSet > ul").stop().animate({top:0}, 0, function(){
-							settings.nowId = 1;
-							base.trigger("slide", settings.nowId);
+						base.find(".photoSet").each(function(i) {
+							$(this).find("ul").each(function(i) {
+								$(this).stop().animate({top:0}, 0, function(){
+									settings.nowId = 1;
+									base.trigger("slide", settings.nowId);
+									//console.log('fin!!');
+								});
+							});
 						});
 						return;
 					} else if(settings.nowId < 0) {
@@ -323,8 +357,8 @@ $.fn.swipephotoslider = function(settings) {
 						return;
 					}
 				} else if(settings.direction == 'fade') {
-					if(settings.nowId > settings.maxId-1) settings.nowId = 0;//普通のループ
-					else if(settings.nowId < 0) settings.nowId = 0;
+					if(settings.nowId > settings.maxId-1) settings.nowId = 0;//
+					else if(settings.nowId < 0) settings.nowId = settings.maxId-1;
 				}
 			} else {
 				if(settings.nowId > settings.maxId-1) settings.nowId = settings.maxId-1;
@@ -365,9 +399,16 @@ $.fn.swipephotoslider = function(settings) {
 		//////////////////////////////////////////////////////////////////////
 
 		//start
-		base.trigger("slide", 0);
+		//base.trigger("slide", 0);
+		
+		var firstTimer = setTimeout( function() {
+			base.trigger("slide", settings.nowId);
+			if(settings.timer && timer) timer.reset(settings.timerInterval);
+		}, settings.timerDelay);
 		
 		//////////////////////////////////////////////////////////////////////
 
 	});
 };
+});
+
